@@ -6,8 +6,6 @@ const config = require('config')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const authRoutes = require('./routes/auth.routes')
-const usersRoutes = require('./routes/users.routes')
-
 
 mongoose.connect(config.get('mongoUri'), {
     useNewUrlParser: true,
@@ -29,6 +27,5 @@ app.use(bodyParser.json())
 
 
 app.use('/api/auth', authRoutes)
-app.use('/api/users', usersRoutes)
 
 module.exports = app

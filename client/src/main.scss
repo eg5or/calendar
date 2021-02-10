@@ -1,0 +1,89 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;700&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
+* {
+  box-sizing: border-box;
+  font-family: Roboto;
+}
+// == VARIABLES ==
+// colors
+$light-color: #ffffff;
+$lighter-color: #fafafa;
+$main-color: #3f51b5;
+$middle-color: #757575;
+$accent-color: #A74B66;
+$dark-color: #4d2b29;
+// adaptive
+$screen-xxs-min: 0px;
+$screen-xs-min: 320px;
+$screen-sm-min: 576px;
+$screen-md-min: 768px;
+$screen-lg-min: 992px;
+$screen-xl-min: 1200px;
+
+$screen-xxs-max: 319px;
+$screen-xs-max: 575px;
+$screen-sm-max: 767px;
+$screen-md-max: 991px;
+$screen-lg-max: 1199px;
+$screen-xl-max: 1399px;
+
+.calendar-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.day-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+
+  &__title {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+}
+
+.day-of-week {
+  text-align: center;
+}
+
+.day-number {
+  display: flex;
+  background-color: $main-color;
+  border-radius: 100%;
+  width: 40px;
+  height: 40px;
+  font-size: 20px;
+  color: $light-color;
+  justify-content: center;
+  align-items: center;
+}
+
+.timeline {
+  min-height: 100vh;
+  width: 100%;
+  padding-top: 20px;
+}
+
+.timeline__hour {
+  height: 30px;
+  width: 100%;
+  border-bottom: 1px dashed $middle-color;
+  border-right: 1px dashed $middle-color;
+}
+
+.timeline__hour:last-child {
+  border-bottom: none;
+}
+
+.day-container:last-child .timeline .timeline__hour {
+  border-right: none;
+}
