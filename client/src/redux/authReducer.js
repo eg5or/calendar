@@ -66,9 +66,18 @@ export const checkAuth = () => async (dispatch, getState) => {
                     dispatch(initializeApp(true))
                 }
             } catch (e) {
+                if(e.response.status === 401) {
+                    localStorage.removeItem('token')
+                    dispatch(deleteAuthUserData())
+                    dispatch(initializeApp(true))
+                }
                 return Promise
             }
+        } else {
+            dispatch(initializeApp(true))
         }
+    } else {
+        dispatch(initializeApp(true))
     }
 };
 

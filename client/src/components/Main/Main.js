@@ -29,6 +29,8 @@ import LayersIcon from '@material-ui/icons/Layers';
 import AssignmentIcon from '@material-ui/icons/Assignment';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {Tooltip} from '@material-ui/core';
+import {demoData} from './../../API/demo-data'
+import Calendar from './Calendar/Calendar';
 
 function Copyright() {
     return (
@@ -135,6 +137,7 @@ const Main = (props) => {
         setOpen(false);
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+
     return (
         <div className={classes.root}>
             <CssBaseline/>
@@ -150,7 +153,7 @@ const Main = (props) => {
                         <MenuIcon/>
                     </IconButton>
                     <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Dashboard
+                        Calendar
                     </Typography>
                     <Tooltip title="Выход" placement="bottom">
                         <IconButton onClick={props.logout} color="inherit">
@@ -232,234 +235,8 @@ const Main = (props) => {
                 </List>
             </Drawer>
             <main className={classes.content}>
-                <div className={classes.appBarSpacer}/>
                 <Container maxWidth="lg" className={classes.container}>
-                    <div className="calendar-wrapper">
-                        <div className="day-container">
-                            <div className="day-container__title">
-                                <div className="day-of-week">Пн</div>
-                                <div className="day-number">8</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Вт</div>
-                                <div className="day-number">9</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Ср</div>
-                                <div className="day-number">10</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Чт</div>
-                                <div className="day-number">11</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Пт</div>
-                                <div className="day-number">12</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Сб</div>
-                                <div className="day-number">13</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                        <div className="day-container">
-                            <div className="day__title">
-                                <div className="day-of-week">Вс</div>
-                                <div className="day-number">14</div>
-                            </div>
-                            <div className="timeline">
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                                <div className="timeline__hour"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <Calendar data={demoData}/>
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>
