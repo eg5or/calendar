@@ -6,6 +6,7 @@ const config = require('config')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 const authRoutes = require('./routes/auth.routes')
+const calendarRoutes = require('./routes/calendar.routes')
 
 mongoose.connect(config.get('mongoUri'), {
     useNewUrlParser: true,
@@ -27,5 +28,6 @@ app.use(bodyParser.json())
 
 
 app.use('/api/auth', authRoutes)
+app.use('/api/calendar', calendarRoutes)
 
 module.exports = app

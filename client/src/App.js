@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import './main.scss';
-import {Switch, Route, withRouter, Redirect} from 'react-router-dom';
+import {Switch, Route, withRouter} from 'react-router-dom';
 import {compose} from 'redux';
 import Auth from './components/Auth/Auth';
 import Main from './components/Main/Main';

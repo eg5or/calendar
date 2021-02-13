@@ -1,23 +1,28 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import Day from './Day/Day';
+import {compose} from 'redux';
+import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
+import {checkAuth, login, logout, register, setResponseMessage} from '../../../redux/authReducer';
+import {
+    addEventsToCellsList,
+    changeEventPosition,
+    getDataEvents,
+    setDatesToTable
+} from '../../../redux/calendarReducer';
 
 
 const Calendar = (props) => {
-    const today = new Date()
-    const days = []
-    const weekDays = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
-    for (let i = 0; i < 7; i++) {
-        const createDay = new Date(today.getFullYear(), today.getMonth(), today.getDate() + i)
-        const day = createDay.getDate()
-        const weekDay = weekDays[createDay.getDay()]
-        days.push([day, weekDay])
-    }
-    const daysElements = days.map((item, index) => {
-        const newArr = props.data.filter(event => event.dateStart.getDate() === item[0])
-        return <Day key={index}
-                    dayNumber={item[0]}
-                    dayOfWeek={item[1]}
-                    events={newArr}
+    useEffect(() => {
+        const today = new Date()
+        props.setDatesToTable(today)
+        props.getDataEvents()
+    },[])
+    const daysElements = props.cellsList.map((item, index) => {
+        return <Day key={`${index}`}
+                    dayNumber={item.dayNumber}
+                    weekDay={item.weekDay}
+                    timeline={item.timeline}
                     dragStartHandler={dragStartHandler}
                     dragEndHandler={dragEndHandler}
                     dragOverHandler={dragOverHandler}
@@ -25,7 +30,11 @@ const Calendar = (props) => {
                     dropHandler={dropHandler}
         />
     })
-
+    let droppedEventId = null
+    let newDateDroppedEvent = null
+    let durationDroppedEvent = null
+    let oldDateStartDroppedEvent = null
+    let droppedEventData = null
     function dragLeaveHandler(e) {
         e.target.style.backgroundColor = null
     }
@@ -37,34 +46,37 @@ const Calendar = (props) => {
 
     function dropHandler(e, dayNumber, hour) {
         e.preventDefault()
-        const targetDay = e.target.id.split('_')[1]
-        const targetHour = e.target.id.split('_')[2]
-        console.log('targetDay', targetDay)
-        console.log('targetHour', targetHour)
+        const today = new Date()
+        newDateDroppedEvent = new Date(today.getFullYear(), today.getMonth(), dayNumber, hour)
         e.target.style.backgroundColor = null
     }
 
-    function dragStartHandler(e, id) {
+    function dragStartHandler(e, id, duration, dateStart, event) {
         e.target.style.opacity = '0'
-        console.log('Start', id)
+        droppedEventId = id
+        durationDroppedEvent = duration
+        oldDateStartDroppedEvent = dateStart
+        droppedEventData = event
     }
 
     function dragEndHandler(e) {
         e.target.style.opacity = '1'
+        props.changeEventPosition(droppedEventId, newDateDroppedEvent, durationDroppedEvent, oldDateStartDroppedEvent, droppedEventData)
     }
     return <div className="calendar-wrapper">
         {daysElements}
-        {/*<div className="events-layer">
-            <div className="element"
-                 onDragStart={(e) => dragStartHandler(e)}
-                 onDragLeave={(e) => dragLeaveHandler(e)}
-                 onDragEnd={(e) => dragEndHandler(e)}
-                 onDragOver={(e) => dragOverHandler(e)}
-                 onDrop={(e) => dropHandler(e)}
-                 draggable={true}
-            >123</div>
-        </div>*/}
     </div>
 }
 
-export default Calendar
+const mapStateToProps = (state) => ({
+    cellsList: state.calendar.cellsList,
+})
+
+export default compose(
+    connect(mapStateToProps, {
+        setDatesToTable,
+        getDataEvents,
+        addEventsToCellsList,
+        changeEventPosition
+    })
+)(Calendar)

@@ -10,24 +10,25 @@ const Event = ({event, dragEndHandler, dragLeaveHandler, dragStartHandler}) => {
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-
     const handleClose = () => {
         setAnchorEl(null);
     };
 
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
+    const dateStart = new Date(event.dateStart)
+    const dateEnd = new Date(event.dateEnd)
 
-    const date = event.dateStart.toLocaleString('ru', {
+    const date = dateStart.toLocaleString('ru', {
         year: 'numeric',
         month: 'long',
         day: 'numeric'
     })
-    const duration = event.dateEnd.getHours() - event.dateStart.getHours() + 1
+    const duration = dateEnd.getHours() - dateStart.getHours() + 1
 
     return <>
     <div draggable={true}
-         onDragStart={(e) => dragStartHandler(e, event.id)}
+         onDragStart={(e) => dragStartHandler(e, event.id, duration, dateStart, event)}
          onDragLeave={(e) => dragLeaveHandler(e)}
          onDragEnd={(e) => dragEndHandler(e)}
          className={`events__item tag-${event.tag}  container__size-${duration}`}
@@ -57,7 +58,7 @@ const Event = ({event, dragEndHandler, dragLeaveHandler, dragStartHandler}) => {
                     {date}
                 </Typography>
                 <Typography  color="textSecondary">
-                    {event.dateStart.getHours()} - {event.dateEnd.getHours()} Тэг: {event.tag === 'important' ? 'Важное' : 'Обычное'}
+                    {dateStart.getHours()} - {dateEnd.getHours()} Тэг: {event.tag === 'important' ? 'Важное' : 'Обычное'}
                 </Typography>
                 <Typography variant="body2" component="p">
                     {event.event}

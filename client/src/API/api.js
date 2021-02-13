@@ -24,8 +24,21 @@ export const authAPI = {
     changePassword(id, newPassword) {
         return instance.post(`auth/changepwd`, {id, newPassword})
     },
+}
 
-    authorized(id) {
-        return instance.get(`auth/authorized/${id}`).then(response => response.data)
+export const calendarAPI = {
+    getEvents(id, token) {
+        return instance.post(`calendar/events`, {id}, {
+            headers: {
+                'Authorization': token
+            }
+        })
+    },
+    changePosition(id, token, eventId, newDate, duration) {
+        return instance.post(`calendar/events/changeposition`, {id, eventId, newDate, duration}, {
+            headers: {
+                'Authorization': token
+            }
+        })
     }
 }

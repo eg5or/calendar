@@ -137,7 +137,6 @@ const Main = (props) => {
         setOpen(false);
     };
     const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
-
     return (
         <div className={classes.root}>
             <CssBaseline/>
@@ -236,7 +235,7 @@ const Main = (props) => {
             </Drawer>
             <main className={classes.content}>
                 <Container maxWidth="lg" className={classes.container}>
-                    <Calendar data={demoData}/>
+                    <Calendar />
                     <Grid container spacing={3}>
                         <Grid item xs={12}>
                             <Paper className={classes.paper}>

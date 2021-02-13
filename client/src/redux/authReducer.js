@@ -1,9 +1,9 @@
 import {authAPI} from '../API/api'
 import {initializeApp} from './appReducer';
 
-const SET_AUTH_USER_DATA = 'SET_AUTH_USER_DATA';
-const DELETE_AUTH_USER_DATA = 'DELETE_AUTH_USER_DATA';
-const SET_RESPONSE_MESSAGE = 'SET_RESPONSE_MESSAGE';
+const SET_AUTH_USER_DATA = 'calendar/auth/SET_AUTH_USER_DATA';
+const DELETE_AUTH_USER_DATA = 'calendar/auth/DELETE_AUTH_USER_DATA';
+const SET_RESPONSE_MESSAGE = 'calendar/auth/SET_RESPONSE_MESSAGE';
 
 let initialState = {
     isAuth: false,

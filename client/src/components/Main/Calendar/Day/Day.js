@@ -4,49 +4,47 @@ import Event from '../Event/Event';
 import Empty from '../Event/Empty';
 
 
-const Day = ({dayOfWeek, dayNumber, events, dropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler}) => {
-
-    const hours = ['00', '01', '02', '03', '04', '05', '06', '07', '08', '09', '10', '11', '12',
-        '13', '14', '15', '16', '17', '18', '19', '20', '21', '22', '23']
-    const hourElements = hours.map((item, index) => {
-        const newArr = events.filter(event => event.dateStart.getHours() === +item)
-        return <Hour key={index} item={item} events={newArr}/>
-    })
-    const resultArray = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23]
+const Day = ({dayNumber, weekDay, timeline, dropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler}) => {
 
 
-    events.forEach(item => {
-        const startHour = item.dateStart.getHours()
-        const endHour = item.dateEnd.getHours()
-        const duration = endHour - startHour + 1
-
-        resultArray.splice(resultArray.indexOf(startHour), duration, item)
+    const hourElements = timeline.map((item, index) => {
+        let hourLabel = ''
+        item.hour < 10 ? hourLabel = '0' + item.hour : hourLabel = item.hour.toString()
+        return <Hour key={index} hourLabel={hourLabel} />
     })
 
-    console.log(resultArray)
-    const elements = resultArray.map(item => {
-        if (typeof item === 'number') {
-            return <Empty hour={item}
-                          dayNumber={dayNumber}
-                          dragOverHandler={dragOverHandler}
-                          dragLeaveHandler={dragLeaveHandler}
-                          dropHandler={dropHandler}
-            />
-        } else {
-            return <Event event={item}
-                          dragStartHandler={dragStartHandler}
-                          dragEndHandler={dragEndHandler}
-                          dragLeaveHandler={dragLeaveHandler}
-            />
+    const elements = timeline.map((item, index) => {
+        switch (item.status) {
+            case 'empty':
+                return <Empty key={index}
+                              hour={item.hour}
+                              dayNumber={dayNumber}
+                              dragOverHandler={dragOverHandler}
+                              dragLeaveHandler={dragLeaveHandler}
+                              dropHandler={dropHandler}
+                />
+                break
+            case 'event':
+                return <Event key={index}
+                              event={item.data}
+                              dragStartHandler={dragStartHandler}
+                              dragEndHandler={dragEndHandler}
+                              dragLeaveHandler={dragLeaveHandler}
+                />
+                break
+            case 'filled':
+                break
+            default:
+                break
         }
     })
 
     return <div id={`day_${dayNumber}`} className="day-container">
         <div className="day-container__title">
             <div
-                className={`${dayOfWeek === 'Вс' || dayOfWeek === 'Сб' ? 'day-of-week weekend' : 'day-of-week'}`}>{dayOfWeek}</div>
+                className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-of-week weekend' : 'day-of-week'}`}>{weekDay}</div>
             <div
-                className={`${dayOfWeek === 'Вс' || dayOfWeek === 'Сб' ? 'day-number weekend-number' : 'day-number'}`}>{dayNumber}</div>
+                className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-number weekend-number' : 'day-number'}`}>{dayNumber}</div>
         </div>
         <div className="timeline">
             <div className="timeline__grid">{hourElements}</div>
