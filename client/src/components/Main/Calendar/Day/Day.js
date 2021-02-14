@@ -2,11 +2,15 @@ import React from 'react';
 import Hour from '../Hour/Hour';
 import Event from '../Event/Event';
 import Empty from '../Event/Empty';
+import {Tooltip} from '@material-ui/core';
+import StarIcon from '@material-ui/icons/Star';
+import {deleteEvent} from '../../../../redux/calendarReducer';
 
+const Day = ({year, month, dayNumber, weekDay, timeline, dropHandler, dragEndHandler,
+                 dragLeaveHandler, dragOverHandler, dragStartHandler, createNewEvent,
+                 isLoading, editEvent, deleteEventFromDb}) => {
 
-const Day = ({dayNumber, weekDay, timeline, dropHandler, dragEndHandler, dragLeaveHandler, dragOverHandler, dragStartHandler}) => {
-
-
+    const months = ['январь', 'февраль', 'март', 'апрель', 'май', 'июнь', 'июль', 'август', 'сентябрь', 'октябрь', 'ноябрь', 'декабрь']
     const hourElements = timeline.map((item, index) => {
         let hourLabel = ''
         item.hour < 10 ? hourLabel = '0' + item.hour : hourLabel = item.hour.toString()
@@ -18,10 +22,14 @@ const Day = ({dayNumber, weekDay, timeline, dropHandler, dragEndHandler, dragLea
             case 'empty':
                 return <Empty key={index}
                               hour={item.hour}
+                              year={year}
+                              month={month}
                               dayNumber={dayNumber}
                               dragOverHandler={dragOverHandler}
                               dragLeaveHandler={dragLeaveHandler}
                               dropHandler={dropHandler}
+                              createNewEvent={createNewEvent}
+                              isLoading={isLoading}
                 />
                 break
             case 'event':
@@ -30,6 +38,9 @@ const Day = ({dayNumber, weekDay, timeline, dropHandler, dragEndHandler, dragLea
                               dragStartHandler={dragStartHandler}
                               dragEndHandler={dragEndHandler}
                               dragLeaveHandler={dragLeaveHandler}
+                              editEvent={editEvent}
+                              deleteEventFromDb={deleteEventFromDb}
+                              isLoading={isLoading}
                 />
                 break
             case 'filled':
@@ -41,10 +52,13 @@ const Day = ({dayNumber, weekDay, timeline, dropHandler, dragEndHandler, dragLea
 
     return <div id={`day_${dayNumber}`} className="day-container">
         <div className="day-container__title">
-            <div
-                className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-of-week weekend' : 'day-of-week'}`}>{weekDay}</div>
-            <div
-                className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-number weekend-number' : 'day-number'}`}>{dayNumber}</div>
+            {dayNumber === new Date().getDate() && month === new Date().getMonth() && <div className="day-container__today">
+                <div className="today-text">Сегодня</div>
+            </div>}
+            <div className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-of-week weekend' : 'day-of-week'}`}>{weekDay}</div>
+            <Tooltip title={months[month] || 'месяц'} placement="bottom">
+                <div className={`${weekDay === 'Вс' || weekDay === 'Сб' ? 'day-number weekend-number' : 'day-number'}`}>{dayNumber}</div>
+            </Tooltip>
         </div>
         <div className="timeline">
             <div className="timeline__grid">{hourElements}</div>

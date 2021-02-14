@@ -1,52 +1,31 @@
-import React from 'react';
-import clsx from 'clsx';
+import React, {useState} from 'react';
 import {makeStyles} from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import Drawer from '@material-ui/core/Drawer';
 import Box from '@material-ui/core/Box';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import List from '@material-ui/core/List';
 import Typography from '@material-ui/core/Typography';
-import Divider from '@material-ui/core/Divider';
 import IconButton from '@material-ui/core/IconButton';
 import Container from '@material-ui/core/Container';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
 import Link from '@material-ui/core/Link';
-import MenuIcon from '@material-ui/icons/Menu';
-import ChevronLeftIcon from '@material-ui/icons/ChevronLeft';
-import EventsList from '../EventsList/EventsList';
-import ListItem from '@material-ui/core/ListItem';
-import ListItemIcon from '@material-ui/core/ListItemIcon';
-import ListItemText from '@material-ui/core/ListItemText';
-import ListSubheader from '@material-ui/core/ListSubheader';
-import DashboardIcon from '@material-ui/icons/Dashboard';
-import ShoppingCartIcon from '@material-ui/icons/ShoppingCart';
-import PeopleIcon from '@material-ui/icons/People';
-import BarChartIcon from '@material-ui/icons/BarChart';
-import LayersIcon from '@material-ui/icons/Layers';
-import AssignmentIcon from '@material-ui/icons/Assignment';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import {Tooltip} from '@material-ui/core';
-import {demoData} from './../../API/demo-data'
 import Calendar from './Calendar/Calendar';
+import NavigateBeforeIcon from '@material-ui/icons/NavigateBefore';
+import NavigateNextIcon from '@material-ui/icons/NavigateNext';
 
 function Copyright() {
     return (
         <Typography variant="body2" color="textSecondary" align="center">
-            {'Copyright © '}
-            <Link color="inherit" href="https://material-ui.com/">
-                Your Website
+            {'Copyright © Calendarchik by '}
+            <Link color="inherit" href="https://github.com/eg5or/calendar">
+                eg5or
             </Link>{' '}
             {new Date().getFullYear()}
             {'.'}
         </Typography>
     );
 }
-
-const drawerWidth = 240;
-
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,14 +48,6 @@ const useStyles = makeStyles((theme) => ({
             duration: theme.transitions.duration.leavingScreen,
         }),
     },
-    appBarShift: {
-        marginLeft: drawerWidth,
-        width: `calc(100% - ${drawerWidth}px)`,
-        transition: theme.transitions.create(['width', 'margin'], {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
     menuButton: {
         marginRight: 36,
     },
@@ -85,26 +56,6 @@ const useStyles = makeStyles((theme) => ({
     },
     title: {
         flexGrow: 1,
-    },
-    drawerPaper: {
-        position: 'relative',
-        whiteSpace: 'nowrap',
-        width: drawerWidth,
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.enteringScreen,
-        }),
-    },
-    drawerPaperClose: {
-        overflowX: 'hidden',
-        transition: theme.transitions.create('width', {
-            easing: theme.transitions.easing.sharp,
-            duration: theme.transitions.duration.leavingScreen,
-        }),
-        width: theme.spacing(7),
-        [theme.breakpoints.up('sm')]: {
-            width: theme.spacing(9),
-        },
     },
     appBarSpacer: theme.mixins.toolbar,
     content: {
@@ -127,122 +78,63 @@ const useStyles = makeStyles((theme) => ({
     },
 }));
 
-const Main = (props) => {
+const Main = ({logout, firstDay, setFirstDay}) => {
     const classes = useStyles();
-    const [open, setOpen] = React.useState(true);
-    const handleDrawerOpen = () => {
-        setOpen(true);
-    };
-    const handleDrawerClose = () => {
-        setOpen(false);
-    };
-    const fixedHeightPaper = clsx(classes.paper, classes.fixedHeight);
+    const today = new Date()
+    const goToNextOrPreviousDay = (direction) => {
+        let newDate = null
+        switch (direction) {
+            case 'right':
+                newDate = new Date(firstDay.setDate(firstDay.getDate() + 1))
+                break
+            case 'left':
+                newDate = new Date(firstDay.setDate(firstDay.getDate() - 1))
+                break
+            default:
+                break
+        }
+        setFirstDay(newDate)
+    }
+    console.log(firstDay)
     return (
         <div className={classes.root}>
             <CssBaseline/>
-            <AppBar position="absolute" className={clsx(classes.appBar, open && classes.appBarShift)}>
-                <Toolbar className={classes.toolbar}>
-                    <IconButton
-                        edge="start"
-                        color="inherit"
-                        aria-label="open drawer"
-                        onClick={handleDrawerOpen}
-                        className={clsx(classes.menuButton, open && classes.menuButtonHidden)}
-                    >
-                        <MenuIcon/>
-                    </IconButton>
-                    <Typography component="h1" variant="h6" color="inherit" noWrap className={classes.title}>
-                        Calendar
-                    </Typography>
-                    <Tooltip title="Выход" placement="bottom">
-                        <IconButton onClick={props.logout} color="inherit">
-                            <ExitToAppIcon/>
-                        </IconButton>
-                    </Tooltip>
+            <AppBar>
+                <Toolbar>
+                    <div className="header">
+                        <div className="header-container">
+                            <div className="leftHeaderButton">
+                                <Tooltip title="Листать назад" placement="bottom">
+                                    <IconButton onClick={() => {goToNextOrPreviousDay('left')}} color="inherit">
+                                        <NavigateBeforeIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                            <div className="logo">
+                                <div className="logo__first">Calendar</div>
+                                <div className="logo__second">chik</div>
+                                <div className="logo__third">{today.getFullYear()}</div>
+                            </div>
+                            <div className="rightHeaderButton">
+                                <Tooltip title="Листать вперед" placement="bottom">
+                                    <IconButton onClick={() => {goToNextOrPreviousDay('right')}} color="inherit">
+                                        <NavigateNextIcon/>
+                                    </IconButton>
+                                </Tooltip>
+                            </div>
+                        </div>
+                        <Tooltip title="Выход" placement="bottom">
+                            <IconButton onClick={logout} color="inherit">
+                                <ExitToAppIcon/>
+                            </IconButton>
+                        </Tooltip>
+                    </div>
                 </Toolbar>
             </AppBar>
-            <Drawer
-                variant="permanent"
-                classes={{
-                    paper: clsx(classes.drawerPaper, !open && classes.drawerPaperClose),
-                }}
-                open={open}
-            >
-                <div className={classes.toolbarIcon}>
-                    <IconButton onClick={handleDrawerClose}>
-                        <ChevronLeftIcon/>
-                    </IconButton>
-                </div>
-                <Divider/>
-                <List>
-                    <div>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <DashboardIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Dashboard"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <ShoppingCartIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Orders"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <PeopleIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Customers"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <BarChartIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Reports"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <LayersIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Integrations"/>
-                        </ListItem>
-                    </div>
-                </List>
-                <Divider/>
-                <List>
-                    <div>
-                        <ListSubheader inset>Saved reports</ListSubheader>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <AssignmentIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Current month"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <AssignmentIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Last quarter"/>
-                        </ListItem>
-                        <ListItem button>
-                            <ListItemIcon>
-                                <AssignmentIcon/>
-                            </ListItemIcon>
-                            <ListItemText primary="Year-end sale"/>
-                        </ListItem>
-                    </div>
-                </List>
-            </Drawer>
+
             <main className={classes.content}>
                 <Container maxWidth="lg" className={classes.container}>
-                    <Calendar />
-                    <Grid container spacing={3}>
-                        <Grid item xs={12}>
-                            <Paper className={classes.paper}>
-                                <EventsList/>
-                            </Paper>
-                        </Grid>
-                    </Grid>
+                    <Calendar firstDay={firstDay}/>
                     <Box pt={4}>
                         <Copyright/>
                     </Box>

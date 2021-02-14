@@ -1,25 +1,24 @@
 import React, {useEffect} from 'react';
 import Day from './Day/Day';
 import {compose} from 'redux';
-import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-import {checkAuth, login, logout, register, setResponseMessage} from '../../../redux/authReducer';
 import {
     addEventsToCellsList,
-    changeEventPosition,
+    changeEventPosition, createNewEvent, deleteEventFromDb, editEvent,
     getDataEvents,
     setDatesToTable
 } from '../../../redux/calendarReducer';
 
-
 const Calendar = (props) => {
     useEffect(() => {
-        const today = new Date()
-        props.setDatesToTable(today)
-        props.getDataEvents()
-    },[])
+        if (props.initialized) {
+            props.setDatesToTable()
+        }
+    }, [])
     const daysElements = props.cellsList.map((item, index) => {
         return <Day key={`${index}`}
+                    year={item.year}
+                    month={item.month}
                     dayNumber={item.dayNumber}
                     weekDay={item.weekDay}
                     timeline={item.timeline}
@@ -28,6 +27,10 @@ const Calendar = (props) => {
                     dragOverHandler={dragOverHandler}
                     dragLeaveHandler={dragLeaveHandler}
                     dropHandler={dropHandler}
+                    createNewEvent={props.createNewEvent}
+                    editEvent={props.editEvent}
+                    deleteEventFromDb={props.deleteEventFromDb}
+                    isLoading={props.isLoading}
         />
     })
     let droppedEventId = null
@@ -35,11 +38,12 @@ const Calendar = (props) => {
     let durationDroppedEvent = null
     let oldDateStartDroppedEvent = null
     let droppedEventData = null
+
     function dragLeaveHandler(e) {
         e.target.style.backgroundColor = null
     }
 
-    function dragOverHandler(e) {
+    function dragOverHandler(e, dayNumber, hour) {
         e.preventDefault()
         e.target.style.backgroundColor = 'lightgray'
     }
@@ -61,15 +65,24 @@ const Calendar = (props) => {
 
     function dragEndHandler(e) {
         e.target.style.opacity = '1'
-        props.changeEventPosition(droppedEventId, newDateDroppedEvent, durationDroppedEvent, oldDateStartDroppedEvent, droppedEventData)
+        e.target.style.flexBasis = '30px'
+        if (droppedEventId && newDateDroppedEvent && durationDroppedEvent && oldDateStartDroppedEvent && droppedEventData) {
+            props.changeEventPosition(droppedEventId, newDateDroppedEvent, durationDroppedEvent, oldDateStartDroppedEvent, droppedEventData)
+        }
     }
+
     return <div className="calendar-wrapper">
+        {props.isLoadingTable && <div className="loaderWrap">
+        </div>}
         {daysElements}
     </div>
 }
 
 const mapStateToProps = (state) => ({
+    isLoading: state.calendar.isLoading,
+    isLoadingTable: state.calendar.isLoadingTable,
     cellsList: state.calendar.cellsList,
+    initialized: state.app.initialized,
 })
 
 export default compose(
@@ -77,6 +90,9 @@ export default compose(
         setDatesToTable,
         getDataEvents,
         addEventsToCellsList,
-        changeEventPosition
+        changeEventPosition,
+        createNewEvent,
+        editEvent,
+        deleteEventFromDb
     })
 )(Calendar)

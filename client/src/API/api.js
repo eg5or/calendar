@@ -40,5 +40,26 @@ export const calendarAPI = {
                 'Authorization': token
             }
         })
+    },
+    addEvent(id, token, event, descr, dateStart, duration, tagName) {
+        return instance.post(`calendar/events/add`, {id, event, descr, dateStart, duration, tagName}, {
+            headers: {
+                'Authorization': token
+            }
+        })
+    },
+    editEvent(id, token, eventId, event, descr, dateStart, duration, tagName) {
+        return instance.post(`calendar/events/edit`, {id, eventId, event, descr, dateStart, duration, tagName}, {
+            headers: {
+                'Authorization': token
+            }
+        })
+    },
+    deleteEvent(id, token, eventId) {
+        return instance.post(`calendar/events/delete`, {id, eventId}, {
+            headers: {
+                'Authorization': token
+            }
+        })
     }
 }

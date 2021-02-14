@@ -9,6 +9,7 @@ import {checkAuth, login, logout, register, setResponseMessage} from './redux/au
 import PrivateRoute from './HOC/PrivateRoute';
 import Register from './components/Auth/Register';
 import Preloader from './common/Preloader/Preloader';
+import {setFirstDay} from './redux/calendarReducer';
 
 
 
@@ -17,7 +18,7 @@ function App(props) {
         props.checkAuth()
     },[])
     if (!props.initialized) {
-        return <div className='preloader'><Preloader/></div>
+        return <div className='loaderWrap'><Preloader/></div>
     }
     return (
         <div className='app-wrapper'>
@@ -33,7 +34,10 @@ function App(props) {
                                                                     typeResponseMessage={props.typeResponseMessage}
                 />}/>
                 <Switch>
-                    <PrivateRoute exact path='/' component={() => <Main logout={props.logout}/> }/>
+                    <PrivateRoute exact path='/' component={() => <Main logout={props.logout}
+                                                                        setFirstDay={props.setFirstDay}
+                                                                        firstDay={props.firstDay}
+                    /> }/>
                 </Switch>
             </Switch>
         </div>
@@ -41,6 +45,7 @@ function App(props) {
 }
 
 const mapStateToProps = (state) => ({
+    firstDay: state.calendar.firstDay,
     initialized: state.app.initialized,
     isAuth: state.auth.isAuth,
     textResponseMessage: state.auth.textResponseMessage,
@@ -54,6 +59,7 @@ export default compose(
         register,
         setResponseMessage,
         checkAuth,
-        logout
+        logout,
+        setFirstDay
     })
 )(App)

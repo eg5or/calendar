@@ -1,14 +1,21 @@
 // constants
-import {authAPI, calendarAPI} from '../API/api';
+import {calendarAPI} from '../API/api';
 
 const SET_DATE = 'calendar/calendar/SET_DATE'
 const SET_DATA_EVENTS = 'calendar/calendar/SET_DATA_EVENTS'
 const CHANGE_STATUS = 'calendar/calendar/CHANGE_STATUS'
 const ADD_EVENT = 'calendar/calendar/ADD_EVENT'
 const DELETE_EVENT = 'calendar/calendar/DELETE_EVENT'
+const SET_FIRST_DAY = 'calendar/calendar/SET_FIRST_DAY'
+const CLEAR_TABLE = 'calendar/calendar/CLEAR_TABLE'
+const TOGGLE_IS_LOADING = 'calendar/calendar/TOGGLE_IS_LOADING'
+const TOGGLE_IS_LOADING_TABLE = 'calendar/calendar/TOGGLE_IS_LOADING_TABLE'
 
 // state
 let initialState = {
+    firstDay: new Date(),
+    isLoading: false,
+    isLoadingTable: false,
     cellsList: [
         {
             dayNumber: null,
@@ -906,15 +913,46 @@ const calendarReducer = (state = initialState, action) => {
                 cellsList: state.cellsList.map((item, index) => {
                     return ({
                         ...item,
-                        dayNumber: action.array[index][0],
-                        weekDay: action.array[index][1],
+                        year: action.array[index][0],
+                        month: action.array[index][1],
+                        dayNumber: action.array[index][2],
+                        weekDay: action.array[index][3],
                     })
                 })
+            }
+        case TOGGLE_IS_LOADING:
+            return {
+                ...state,
+                isLoading: action.bool
+            }
+        case TOGGLE_IS_LOADING_TABLE:
+            return {
+                ...state,
+                isLoadingTable: action.bool
             }
         case SET_DATA_EVENTS:
             return {
                 ...state,
                 events: action.data
+            }
+        case SET_FIRST_DAY:
+            return {
+                ...state,
+                firstDay: action.newDay
+            }
+        case CLEAR_TABLE:
+            return {
+                ...state,
+                cellsList: [
+                    ...state.cellsList.map((e, i) => {
+                            return {
+                                ...e, timeline: [...e.timeline.map((el, k) => {
+                                        return {...el, data: null, status: 'empty'}
+                                })
+                                ]
+                            }
+                    }),
+                ]
             }
         case CHANGE_STATUS:
             const dayNum = state.cellsList.findIndex(item => item.dayNumber === action.day)
@@ -990,30 +1028,46 @@ export const setDataEvents = (data) => ({type: SET_DATA_EVENTS, data})
 export const changeStatus = (day, hour, status) => ({type: CHANGE_STATUS, day, hour, status})
 export const addEvent = (day, hour, event) => ({type: ADD_EVENT, day, hour, event})
 export const deleteEvent = (day, hour) => ({type: DELETE_EVENT, day, hour})
+export const setFirstDay = (newDay) => ({type: SET_FIRST_DAY, newDay})
+export const clearTable = () => ({type: CLEAR_TABLE})
+export const toggleIsLoading = (bool) => ({type: TOGGLE_IS_LOADING, bool})
+export const toggleIsLoadingTable = (bool) => ({type: TOGGLE_IS_LOADING_TABLE, bool})
 
 // thunks
-export const setDatesToTable = (date) => (dispatch) => {
+export const setDatesToTable = () => (dispatch, getState) => {
+    dispatch(toggleIsLoadingTable(true))
+    let newDate = getState().calendar.firstDay
     const weekDays = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
     const days = []
     for (let i = 0; i < 7; i++) {
-        const createDay = new Date(date.getFullYear(), date.getMonth(), date.getDate() + i)
+        if (!newDate) {
+            newDate = new Date()
+        }
+        const createDay = new Date(newDate.getFullYear(), newDate.getMonth(), newDate.getDate() + i)
+        const year = createDay.getFullYear()
+        const month = createDay.getMonth()
         const dayNumber = createDay.getDate()
         const weekDay = weekDays[createDay.getDay()]
-        days.push([dayNumber, weekDay])
+        days.push([year, month, dayNumber, weekDay])
     }
     dispatch(setDate(days))
+    dispatch(clearTable())
+    dispatch(getDataEvents())
 }
 
 export const getDataEvents = () => async (dispatch) => {
-    const id = JSON.parse(localStorage.getItem('token')).id
-    const token = JSON.parse(localStorage.getItem('token')).token
-    try {
-        const data = await calendarAPI.getEvents(id, token)
-        dispatch(setDataEvents(data.data.events))
-        dispatch(addEventsToCellsList())
-    } catch (e) {
-        console.log('Ошибка ', e)
+    if (localStorage.getItem('token')) {
+        const id = JSON.parse(localStorage.getItem('token')).id
+        const token = JSON.parse(localStorage.getItem('token')).token
+        try {
+            const data = await calendarAPI.getEvents(id, token)
+            dispatch(setDataEvents(data.data.events))
+            dispatch(addEventsToCellsList())
+        } catch (e) {
+            console.log('Ошибка ', e)
+        }
     }
+    dispatch(toggleIsLoadingTable(false))
 }
 
 export const addEventsToCellsList = () => (dispatch, getState) => {
@@ -1031,10 +1085,10 @@ export const addEventsToCellsList = () => (dispatch, getState) => {
             }
         }
     })
+
 }
 
 export const moveEvent = (newDate, duration, oldDateStart, droppedEventData) => async (dispatch, getState) => {
-    debugger
     dispatch(deleteEvent(oldDateStart.getDate(), oldDateStart.getHours()))
     if (duration > 1) {
         for (let i = 1; i < duration; i++) {
@@ -1042,19 +1096,40 @@ export const moveEvent = (newDate, duration, oldDateStart, droppedEventData) => 
         }
     }
     dispatch(addEvent(newDate.getDate(), newDate.getHours(), droppedEventData))
-    if (duration > 1) {
-        for (let i = 1; i < duration; i++) {
-            dispatch(changeStatus(newDate.getDate(), newDate.getHours() + i, 'filled'))
-        }
-    }
 }
 
-export const changeEventPosition = (eventId, newDate, duration, oldDateStart, droppedEventData) => async (dispatch, getState) => {
+export const changeEventPosition = (eventId, newDate, duration, oldDateStart, droppedEventData) => async (dispatch) => {
     const id = JSON.parse(localStorage.getItem('token')).id
     const token = JSON.parse(localStorage.getItem('token')).token
-    await calendarAPI.changePosition(id, token, eventId, newDate, duration)
     dispatch(moveEvent(newDate, duration, oldDateStart, droppedEventData))
+    await calendarAPI.changePosition(id, token, eventId, newDate, duration)
     dispatch(getDataEvents())
+}
+
+export const createNewEvent = (event, descr, dateStart, duration, tagName) => async (dispatch) => {
+    dispatch(toggleIsLoading(true))
+    const id = JSON.parse(localStorage.getItem('token')).id
+    const token = JSON.parse(localStorage.getItem('token')).token
+    await calendarAPI.addEvent(id, token, event, descr, dateStart, duration, tagName)
+    dispatch(getDataEvents())
+    dispatch(toggleIsLoading(false))
+}
+
+export const editEvent = (eventId, event, descr, dateStart, duration, tagName) => async (dispatch, getState) => {
+    dispatch(toggleIsLoading(true))
+    const id = JSON.parse(localStorage.getItem('token')).id
+    const token = JSON.parse(localStorage.getItem('token')).token
+    await calendarAPI.editEvent(id, token, eventId, event, descr, dateStart, duration, tagName)
+    dispatch(setDatesToTable())
+    dispatch(toggleIsLoading(false))
+}
+export const deleteEventFromDb = (eventId) => async (dispatch, getState) => {
+    dispatch(toggleIsLoading(true))
+    const id = JSON.parse(localStorage.getItem('token')).id
+    const token = JSON.parse(localStorage.getItem('token')).token
+    await calendarAPI.deleteEvent(id, token, eventId)
+    dispatch(setDatesToTable())
+    dispatch(toggleIsLoading(false))
 }
 
 export default calendarReducer
