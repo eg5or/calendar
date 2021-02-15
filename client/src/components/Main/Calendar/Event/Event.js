@@ -105,6 +105,7 @@ const EditComponent = ({event, editEvent, onEdit, handleClose}) => {
         </CardContent>
         <CardActions>
             <Button onClick={onSaveEvent} size="small">Сохранить</Button>
+            <Button onClick={() => {onEdit(false)}} size="small">Отмена</Button>
         </CardActions>
     </>
 }

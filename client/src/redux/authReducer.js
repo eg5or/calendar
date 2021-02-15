@@ -1,5 +1,6 @@
 import {authAPI} from '../API/api'
 import {initializeApp} from './appReducer';
+import {setDatesToTable} from './calendarReducer';
 
 const SET_AUTH_USER_DATA = 'calendar/auth/SET_AUTH_USER_DATA';
 const DELETE_AUTH_USER_DATA = 'calendar/auth/DELETE_AUTH_USER_DATA';
@@ -92,6 +93,7 @@ export const login = (email, password) => async (dispatch) => {
             token: response.data.token,
             id: response.data.id
         }))
+        dispatch(setDatesToTable())
     } else {
         dispatch(setResponseMessage(response.message, 'error'))
     }
