@@ -3,8 +3,6 @@ import Hour from '../Hour/Hour';
 import Event from '../Event/Event';
 import Empty from '../Event/Empty';
 import {Tooltip} from '@material-ui/core';
-import StarIcon from '@material-ui/icons/Star';
-import {deleteEvent} from '../../../../redux/calendarReducer';
 
 const Day = ({year, month, dayNumber, weekDay, timeline, dropHandler, dragEndHandler,
                  dragLeaveHandler, dragOverHandler, dragStartHandler, createNewEvent,
@@ -31,7 +29,6 @@ const Day = ({year, month, dayNumber, weekDay, timeline, dropHandler, dragEndHan
                               createNewEvent={createNewEvent}
                               isLoading={isLoading}
                 />
-                break
             case 'event':
                 return <Event key={index}
                               event={item.data}
@@ -42,7 +39,6 @@ const Day = ({year, month, dayNumber, weekDay, timeline, dropHandler, dragEndHan
                               deleteEventFromDb={deleteEventFromDb}
                               isLoading={isLoading}
                 />
-                break
             case 'filled':
                 break
             default:

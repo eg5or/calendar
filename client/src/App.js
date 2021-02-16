@@ -2,14 +2,14 @@ import React, {useEffect} from 'react';
 import './main.scss';
 import {Switch, Route, withRouter} from 'react-router-dom';
 import {compose} from 'redux';
-import Auth from './components/Auth/Auth';
-import Main from './components/Main/Main';
 import {connect} from 'react-redux';
-import {checkAuth, login, logout, register, setResponseMessage} from './redux/authReducer';
 import PrivateRoute from './HOC/PrivateRoute';
+import {checkAuth, login, logout, register, setResponseMessage} from './redux/authReducer';
+import {setFirstDay} from './redux/calendarReducer';
 import Register from './components/Auth/Register';
 import Preloader from './common/Preloader/Preloader';
-import {setFirstDay} from './redux/calendarReducer';
+import Auth from './components/Auth/Auth';
+import Main from './components/Main/Main';
 
 
 

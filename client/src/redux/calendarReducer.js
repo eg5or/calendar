@@ -1056,6 +1056,7 @@ export const setDatesToTable = () => (dispatch, getState) => {
 }
 
 export const getDataEvents = () => async (dispatch) => {
+    dispatch(toggleIsLoadingTable(true))
     if (localStorage.getItem('token')) {
         const id = JSON.parse(localStorage.getItem('token')).id
         const token = JSON.parse(localStorage.getItem('token')).token

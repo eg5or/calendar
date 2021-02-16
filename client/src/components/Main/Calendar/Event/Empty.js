@@ -30,13 +30,6 @@ const Empty = ({year, month, hour, dayNumber, dragLeaveHandler, dragOverHandler,
     const open = Boolean(anchorEl);
     const id = open ? 'simple-popover' : undefined;
 
-    /*'ru', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        hour: 'numeric',
-        minute: 'numeric'
-    }*/
     // -----------------------------------------------------------------------------------------------------------------
     // Formik
     const formik = useFormik({

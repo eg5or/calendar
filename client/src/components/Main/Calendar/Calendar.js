@@ -65,7 +65,6 @@ const Calendar = (props) => {
 
     function dragEndHandler(e) {
         e.target.style.opacity = '1'
-        e.target.style.flexBasis = '30px'
         if (droppedEventId && newDateDroppedEvent && durationDroppedEvent && oldDateStartDroppedEvent && droppedEventData) {
             props.changeEventPosition(droppedEventId, newDateDroppedEvent, durationDroppedEvent, oldDateStartDroppedEvent, droppedEventData)
         }
@@ -93,6 +92,6 @@ export default compose(
         changeEventPosition,
         createNewEvent,
         editEvent,
-        deleteEventFromDb
+        deleteEventFromDb,
     })
 )(Calendar)

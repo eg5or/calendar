@@ -9,7 +9,6 @@ import store from './redux/redux-store'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns'
 import ru from "date-fns/locale/ru";
-import en from "date-fns/locale/en-US";
 
 ReactDOM.render(
     <React.StrictMode>
