@@ -14,11 +14,14 @@ import Button from '@material-ui/core/Button';
 import {useFormik} from 'formik';
 import {DateTimePicker} from '@material-ui/pickers';
 import Preloader from '../../../../common/Preloader/Preloader';
+
 const format = require('date-fns/format')
 
 
-const Empty = ({year, month, hour, dayNumber, dragLeaveHandler, dragOverHandler, dropHandler,
-                   createNewEvent, isLoading}) => {
+const Empty = ({
+                   year, month, hour, dayNumber, dragLeaveHandler, dragOverHandler, dropHandler,
+                   createNewEvent, isLoading
+               }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
@@ -34,7 +37,7 @@ const Empty = ({year, month, hour, dayNumber, dragLeaveHandler, dragOverHandler,
     // Formik
     const formik = useFormik({
         initialValues: {
-            eventName: '',
+            eventName: 'Новое мероприятие',
             tagName: 'default',
             duration: 1,
             eventDescription: '',
@@ -78,79 +81,90 @@ const Empty = ({year, month, hour, dayNumber, dragLeaveHandler, dragOverHandler,
                 horizontal: 'center',
             }}
         >
-            <Card>
-                <CardContent>
+            <div className="popover-container">
+                <div className="edit">
                     {isLoading && <div className="loaderWrap">
                         <Preloader/>
                     </div>}
-                    <TextField
-                        id="eventName"
-                        label="Название мероприятия"
-                        value={formik.values.eventName}
-                        onChange={formik.handleChange}
-                        fullWidth
-                    />
-                    <Typography variant="h5" component="h2">
+                    <div className="field edit__input">
+                        <TextField
+                            autoFocus
+                            onFocus={(e) => { e.target.select()}}
+                            id="eventName"
+                            label="Название мероприятия"
+                            value={formik.values.eventName}
+                            onChange={formik.handleChange}
+                            fullWidth
+                        />
+                    </div>
+                    <div className="field edit__dateTimePicker">
                         <DateTimePicker
+                            fullWidth
                             autoOk
                             ampm={false}
                             value={datePicker}
+                            format="HH:mm - d MMMM yyyy"
+                            cancelLabel="отмена"
                             onChange={handleChangeDate}
                             id="dateCreate"
-                            label="24h clock"
-
+                            label="Начало мероприятия"
+                            minutesStep={60}
                         />
-                    </Typography>
-                    <FormControl variant="filled" fullWidth>
-                        <InputLabel htmlFor="duration">Продолжительность</InputLabel>
-                        <Select
-                            value={formik.values.duration}
+                    </div>
+                    <div className="field edit__duration">
+                        <FormControl variant="standard" fullWidth>
+                            <InputLabel htmlFor="duration">Продолжительность (часов)</InputLabel>
+                            <Select
+                                value={formik.values.duration}
+                                onChange={formik.handleChange}
+                                inputProps={{
+                                    name: 'duration',
+                                    id: 'duration',
+                                }}
+                            >
+                                <MenuItem value={1}>1</MenuItem>
+                                <MenuItem value={2}>2</MenuItem>
+                                <MenuItem value={3}>3</MenuItem>
+                                <MenuItem value={4}>4</MenuItem>
+                                <MenuItem value={5}>5</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </div>
+                    <div className="field edit__tag">
+                        <FormControl component="fieldset" id="tagName" fullWidth onChange={formik.handleChange}>
+                            <RadioGroup row aria-label="duration" name="tagName" defaultValue="default">
+                                <FormControlLabel
+                                    value="important"
+                                    control={<Radio color="primary"/>}
+                                    label="Важное"
+                                    labelPlacement="start"
+                                />
+                                <FormControlLabel
+                                    value="default"
+                                    control={<Radio color="primary"/>}
+                                    label="Обычное"
+                                    labelPlacement="start"
+                                />
+                            </RadioGroup>
+                        </FormControl>
+                    </div>
+                    <div className="field edit__descr">
+                        <TextField
+                            id="eventDescription"
+                            label="Описание"
+                            multiline
+                            rows={4}
+                            variant="outlined"
+                            value={formik.values.eventDescription}
                             onChange={formik.handleChange}
-                            inputProps={{
-                                name: 'duration',
-                                id: 'duration',
-                            }}
-                        >
-                            <MenuItem value={1}>1</MenuItem>
-                            <MenuItem value={2}>2</MenuItem>
-                            <MenuItem value={3}>3</MenuItem>
-                            <MenuItem value={4}>4</MenuItem>
-                            <MenuItem value={5}>5</MenuItem>
-                        </Select>
-                    </FormControl>
-                    <FormControl component="fieldset" id="tagName" fullWidth onChange={formik.handleChange}>
-                        <FormLabel component="legend">Тег:</FormLabel>
-                        <RadioGroup row aria-label="position" name="tagName" defaultValue="default">
-                            <FormControlLabel
-                                value="important"
-                                control={<Radio color="primary"/>}
-                                label="Важное"
-                                labelPlacement="start"
-                            />
-                            <FormControlLabel
-                                value="default"
-                                control={<Radio color="primary"/>}
-                                label="Обычное"
-                                labelPlacement="start"
-                            />
-                        </RadioGroup>
-                    </FormControl>
-                    <TextField
-                        id="eventDescription"
-                        label="Описание"
-                        multiline
-                        rows={4}
-                        variant="outlined"
-                        value={formik.values.eventDescription}
-                        onChange={formik.handleChange}
-                        fullWidth
-                    />
-
-                </CardContent>
-                <CardActions>
-                    <Button onClick={onAddNewEvent} size="small">+ Добавить</Button>
-                </CardActions>
-            </Card>
+                            fullWidth
+                        />
+                    </div>
+                </div>
+                <div className="actionsButtons">
+                    <Button fullWidth onClick={onAddNewEvent} variant="contained" color="primary" size="medium">+ Добавить</Button>
+                </div>
+            </div>
         </Popover>
     </>
 }
