@@ -1,16 +1,19 @@
 import React, {useState} from 'react';
-import {
-    Card,
-    CardActions,
-    CardContent,
-    Popover,
-} from '@material-ui/core';
-import Typography from '@material-ui/core/Typography';
+import {Popover, Tooltip} from '@material-ui/core';
+import WarningIcon from '@material-ui/icons/Warning';
 import Button from '@material-ui/core/Button';
 import Preloader from '../../../../common/Preloader/Preloader';
 import EditEvent from './EditEvent';
 
-const Event = ({event, dragEndHandler, dragLeaveHandler, dragStartHandler, editEvent, deleteEventFromDb, isLoading}) => {
+const Event = ({
+                   event,
+                   dragEndHandler,
+                   dragLeaveHandler,
+                   dragStartHandler,
+                   editEvent,
+                   deleteEventFromDb,
+                   isLoading
+               }) => {
     const [anchorEl, setAnchorEl] = React.useState(null);
 
     const handleClick = (event) => {
@@ -66,7 +69,10 @@ const Event = ({event, dragEndHandler, dragLeaveHandler, dragStartHandler, editE
                 horizontal: 'center',
             }}
         >
-            <Card>
+            <div className={`popover-container ${event.tag === 'important' && 'important-bg'}`}>
+                {event.tag === 'important' && <div className="important-icon">
+                    <Tooltip title={event.tag === 'important' ? 'Важное' : 'Обычное'}><WarningIcon /></Tooltip>
+                </div>}
                 {isLoading && <div className="loaderWrap">
                     <Preloader/>
                 </div>}
@@ -77,33 +83,28 @@ const Event = ({event, dragEndHandler, dragLeaveHandler, dragStartHandler, editE
                                  handleClose={handleClose}
                                  duration={duration}
                     />
-                    : <>
-                        <CardContent>
-                            <Typography color="textSecondary" gutterBottom>
-                                Мероприятие
-                            </Typography>
-                            <Typography variant="h5" component="h2">
-                                {date}
-                            </Typography>
-                            <Typography color="textSecondary">
-                                c {dateStart.getHours()}:00 до {dateEnd.getHours()}:00
-                                Тэг: {event.tag === 'important' ? 'Важное' : 'Обычное'}
-                            </Typography>
-                            <Typography variant="h6" component="h3">
-                                {event.event}
-                            </Typography>
-                            <Typography variant="body2" component="p">
-                                {event.descr}
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={onDeleteEvent} size="small">Удалить</Button>
-                            <Button onClick={() => {
+                    : <div className="view-event">
+                        <div className="field view-event__title">
+                            {event.event}
+                        </div>
+                        <div className="field view-event__date">
+                            {date}
+                        </div>
+                        <div className={`field view-event__time view-event__time_${event.tag === 'important' ? 'important' : 'default'}`}>
+                            c {dateStart.getHours()}:00 до {dateEnd.getHours() + 1}:00
+                        </div>
+                        <div className="field view-event__descr">
+                            {event.descr}
+                        </div>
+                        <div className="actionsButtons">
+                            <Button fullWidth onClick={onDeleteEvent} color="secondary" size="medium">Удалить</Button>
+                            <Button fullWidth onClick={() => {
                                 onEdit(true)
-                            }} size="small">Изменить</Button>
-                        </CardActions>
-                    </>}
-            </Card>
+                            }} color="primary" size="medium">Изменить</Button>
+                        </div>
+                    </div>
+                }
+            </div>
         </Popover>
     </>
 }

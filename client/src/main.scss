@@ -37,11 +37,36 @@ $screen-xl-max: 1399px;
   font-weight: 700;
   color: white;
   text-shadow: -2px -2px 0 $dark-color, 2px -2px 0 $dark-color, -2px 2px 0 $dark-color, 2px 2px 0 $dark-color;
+
+
+  @media (max-width: $screen-md-max) {
+    -moz-transform: rotate(-90deg);
+    -webkit-transform: rotate(-90deg);
+    -o-transform: rotate(-90deg);
+    -ms-transform: rotate(-90deg);
+    transform: rotate(-90deg);
+  }
   &__first {
-    font-size: 100px;
+    @media (max-width: 699px) {
+      display: none;
+    }
+    @media (min-width: $screen-sm-min) {
+      font-size: 50px;
+    }
+    @media (min-width: $screen-xl-min) {
+      font-size: 100px;
+    }
   }
   &__second {
-    font-size: 50px;
+    @media (max-width: 699px) {
+      display: none;
+    }
+    @media (min-width: $screen-sm-min) {
+      font-size: 20px;
+    }
+    @media (min-width: $screen-xl-min) {
+      font-size: 40px;
+    }
   }
 }
 
@@ -423,4 +448,107 @@ $screen-xl-max: 1399px;
   img {
     z-index: 999;
   }
+}
+
+.edit {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__input {
+
+  }
+
+  &__dateTimePicker {
+
+  }
+
+  &__duration {
+
+  }
+
+  &__tag {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__descr {
+
+  }
+
+}
+
+.view-event {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  &__title {
+    max-width:90%;
+    font-weight: 700;
+  }
+
+  &__date {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  &__time {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $lighter-color;
+    padding: 5px;
+    border-radius: 5px;
+    &_important {
+      background-color: $accent-color;
+    }
+    &_default {
+      background-color: $main-color;
+    }
+  }
+
+  &__descr {
+    padding: 4px;
+    font-weight: 300;
+    max-width: 260px;
+    max-height: 100px;
+    overflow: auto;
+  }
+
+}
+
+.field:not(:last-child) {
+  margin-bottom: 10px;
+}
+
+.popover-container {
+  min-width: 280px;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  position: relative;
+}
+
+.actionsButtons {
+  width: 100%;
+  margin-top: 15px;
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.important-bg {
+
+}
+
+.important-icon {
+  position: absolute;
+  right: 8px;
+  top: 8px;
+  color: $accent-color;
 }

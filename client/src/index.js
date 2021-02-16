@@ -9,12 +9,19 @@ import store from './redux/redux-store'
 import {MuiPickersUtilsProvider} from '@material-ui/pickers';
 import DateFnsUtils from '@date-io/date-fns'
 import ru from "date-fns/locale/ru";
+import format from "date-fns/format";
+
+class LocalizedUtils extends DateFnsUtils {
+    getDatePickerHeaderText(date) {
+        return format(date, "d MMMM yyyy", { locale: this.locale });
+    }
+}
 
 ReactDOM.render(
     <React.StrictMode>
         <BrowserRouter>
             <Provider store={store}>
-                <MuiPickersUtilsProvider utils={DateFnsUtils} locale={ru}>
+                <MuiPickersUtilsProvider utils={LocalizedUtils} locale={ru}>
                     <App/>
                 </MuiPickersUtilsProvider>
             </Provider>
